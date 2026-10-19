@@ -1,0 +1,59 @@
+1. Voice Pipeline의 5단계 흐름을 쓰세요.
+음성 입력 → STT → 음성 처리 → STT → 재생
+
+2. STT의 풀네임은?
+Speech To Text
+
+3. TTS의 풀네임은?
+Text To Speech
+
+4. I/O의 의미는?
+입출력 (Input/Output)
+
+5. Latency는 무엇을 뜻하나요?
+지연시간
+
+6. SDK의 풀네임은?
+Software Development Kit
+
+7. MVP의 풀네임은?
+Minimum Viable Product
+
+8. Inference의 의미는?
+학습된 모델을 사용하여 예측/생성하는 추론
+
+9. Model Version을 기록하는 이유는?
+결과 추적 및 변경 전후 비교
+
+10. 요청마다 생성하는 식별자는?
+request_id
+
+11. WAV PCM의 대표적 특성은?
+비압축 샘플 오디오 저장
+
+12. 16kHz의 의미는?
+초당 16,000개 샘플
+
+13. 공통 인터페이스로 SDK를 감싸는 설계는?
+어댑터(Adapter) 패턴
+
+14. Streamlit 음성 녹음 입력 함수는?
+st.audio_input()
+
+15. Streamlit 오디오 재생 함수는?
+st.audio()
+
+16. ms 단위 구간시간 측정에 사용할 파이썬 함수는?
+time.perf_counter()
+
+17. 지연시간 95백분위는 보통 어떻게 표기하나요?
+P95
+
+18. JSON Lines 형식의 확장자는?
+.jsonl
+
+19. STT 인식 오류율 중 문자 단위 지표는?
+CER
+
+20. DB 장애가 생겨도 오디오 결과를 보여주도록 하는 원칙은?
+핵심 기능과 로그 저장의 장애 분리
