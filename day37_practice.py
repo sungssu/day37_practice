@@ -45,6 +45,7 @@
 
 
 # day37_practice.py
+# day37_practice.py
 import os
 import time
 import json
@@ -59,7 +60,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # .env 로딩
 
-# 입력 파일 최대 크기를 10Mbytes로 제한 (수정 완료)
+# 입력 파일 최대 크기를 10Mbytes로 제한 (정상 수정)
 MAX_BYTES = 10 * 1024 * 1024
 
 # 실행이력을 저장할 jsonl파일 경로
@@ -68,7 +69,7 @@ LOG_PATH = Path(__file__).with_name('voice_runs_campus.jsonl')
 # 시설 정보 딕셔너리
 FACILITIES = {
     "도서관": "도서관은 본관 옆 건물이며 평일 9시부터 18시까지 운영합니다.",
-    "학생식당": "학생식당은 학생회관 1층에 있으며 11시부터 14시까지 운영합니다.",
+    "학생식당": "학생식당은 학생회관 1층이며 11시부터 14시까지 운영합니다.",
     "취업지원센터": "취업지원센터는 학생회관 2층이며 취업 상담을 제공합니다.",
     "행정실": "행정실은 본관 1층이며 각종 증명서 발급을 안내합니다.",
 }
@@ -154,6 +155,7 @@ def store_meta(meta):
     except Exception as e:
         st.warning(f'DB 실행 이력 저장 실패: {type(e).__name__}: {e}')
 
+
 # 파이프라인
 def run_pipeline(audio_file, model_size, voice_id):
     request_id = str(uuid.uuid4())
@@ -168,9 +170,23 @@ def run_pipeline(audio_file, model_size, voice_id):
     error = None
 
     try:
-        # STT 실행 단계
+        # STT 실행 단계 (실제 faster-whisper 연동)
         t0 = time.perf_counter()
-        text = '도서관 운영시간 알려줘'
+
+        from faster_whisper import WhisperModel
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_audio:
+            tmp_audio.write(audio_bytes_data)
+            tmp_audio_path = tmp_audio.name
+
+        try:
+            model = WhisperModel(model_size, device="cpu", compute_type="int8")
+            segments, info = model.transcribe(tmp_audio_path, language="ko")
+            text = "".join([segment.text for segment in segments]).strip()
+            if not text:
+                text = "인식된 음성이 없습니다."
+        finally:
+            Path(tmp_audio_path).unlink(missing_ok=True)
+
         marks['stt_ms'] = (time.perf_counter() - t0) * 1000
 
         # 답변 생성 실행
